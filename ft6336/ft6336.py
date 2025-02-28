@@ -9,9 +9,9 @@ class FT6336:
         self.G_MODE_REG = 0xa4
         self.TD_STATUS_REG = 0x02
         self.P1_X_REG = 0x03
-        self.P1_Y_REG = 0x04
+        self.P1_Y_REG = 0x05
         self.P2_X_REG = 0x09
-        self.P2_Y_REG = 0x0a
+        self.P2_Y_REG = 0x0b
 
         self.i2c.writeto_mem(self.addr, self.G_MODE_REG, b'\x00')     # Set polling mode, it will signal touch constantly while touched (using INT pin)
 
@@ -32,4 +32,4 @@ class FT6336:
 
     def read_touch_point(self, reg):
         bytes = self.i2c.readfrom_mem(self.addr, reg, 2)
-        return bytes[0] | bytes[1] & 0x07
+        return int(bytes[1]) | ((int(bytes[0]) & 0x07) << 8)
